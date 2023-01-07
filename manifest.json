@@ -56,7 +56,11 @@
             "minified" : true,
 			"checkSiteMap": false
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+		"optimization" : {
+			"subPackages" : true
+		},
+		"requiredPrivateInfos":[ "chooseAddress" ]
     },
     "vueVersion" : "2"
 }
