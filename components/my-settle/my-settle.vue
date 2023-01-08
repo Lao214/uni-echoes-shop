@@ -22,7 +22,10 @@
 		name:"my-settle",
 		data() {
 			return {
-				
+				//倒计时的秒数
+				seconds: 3,
+				//定时器的id
+				timer: null
 			};
 		},
 		computed: {
@@ -36,6 +39,7 @@
 		},
 		methods: {
 			...mapMutations('m_cart',['updateAllGoodsState']),
+			...mapMutations('m_user',['updateRedirectInfo']),
 			changeAllState() {
 				// console.log(!this.isFullCheck)
 				this.updateAllGoodsState(!this.isFullCheck)
@@ -46,7 +50,44 @@
 				
 				if(!this.addstr) return uni.$showMsg('请选择收货地址')
 				 
-				if(!this.token) return uni.$showMsg('请您先登录！')
+				if(!this.token) return this.delayNavigate()
+			},
+			// 延时导航到 my 页面
+			delayNavigate() {
+				this.seconds = 3
+				
+				this.showTips(this.seconds)
+				
+				this.timer = setInterval(() => {
+					this.seconds--
+					
+					if(this.seconds <= 0) {
+						clearInterval(this.timer)
+						
+						uni.switchTab({
+							url: '/pages/my/my',
+							success: () => {
+								this.updateRedirectInfo({
+									openType: 'switchTab',
+									from: '/pages/cart/cart'
+								})
+							}
+						})
+						
+						return
+					}
+					
+					this.showTips(this.seconds)
+				}, 1000)
+			},
+			// 展示倒计时的提示消息
+			showTips(n) {
+				uni.showToast({
+					icon: 'none',
+					title: '请登录后再结算！'+ n +'秒之后自动跳转到登录页',
+					mask: true,
+					duration: 1500
+				})
 			}
 		}
 	}

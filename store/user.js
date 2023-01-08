@@ -4,7 +4,11 @@ export default {
 	
 	state: () => ({
 		address: JSON.parse(uni.getStorageSync('address') || '{}'),
-		token: ''
+		token: uni.getStorageSync('token') || '',
+		// 用户的信息对象
+		userinfo: JSON.parse(uni.getStorageSync('userinfo') || '{}'),
+		// 重定向的 Object对象
+		redirectInfo: null
 	}),
 	
 	// 方法
@@ -18,6 +22,26 @@ export default {
 		// 持久化存储 address
 		saveAddressToStorage(state) {
 			uni.setStorageSync('address', JSON.stringify(state.address))
+		},
+		updateUserInfo(state, userInfo) {
+			state.userinfo = userInfo
+			
+			this.commit('m_user/saveUserInfoToStorage')
+		},
+		saveUserInfoToStorage(state) {
+			// console.log(state.userinfo)
+			uni.setStorageSync('userinfo',JSON.stringify(state.userinfo))
+		},
+		updateToken(state, token) {
+			state.token = token
+			
+			this.commit('m_user/saveTokenToStorage',)
+		},
+		saveTokenToStorage(state) {
+			uni.setStorageSync('token',state.token)
+		},
+		updateRedirectInfo(state, info) {
+			state.redirectInfo = info
 		}
 	},
 	
